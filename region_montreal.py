@@ -8,6 +8,29 @@ import pandas as pd
 import re
 import math
 
+def getColor(d):
+  max = 0
+  color = 'gray'
+  try: 
+    p =d
+    if (p['pq']== p['pq'] and p['pq'] > max):
+      max = p['pq']
+      color = 'blue'
+    if (p['plq'] == p['plq'] and p['plq'] > max):
+      max = p['plq']
+      color = 'red'
+    if p['caq']== p['caq'] and p['caq'] > max:
+      max = p['caq']
+      color = 'lightblue'
+    if p['qs']== p['qs'] and  p['qs'] > max:
+      max = p['qs']
+      color = 'orange'
+  except:
+    color = 'white'
+  
+
+  return color
+
 couleurs = {
     'C.A.Q.-É.F.L.': 'lightblue',
     'P.L.Q./Q.L.P.': 'red',
@@ -28,7 +51,10 @@ re_ea = re.compile('.* É\.A\.$')
 re_pn = re.compile('.* P\.N\.$')
 
 
-couverture = [304,306,310,312,316,318,320,324,326,330,336,338,340,344,346,350,352,356,360,364,366,370,380,390]
+couverture = ['300', '304','306','310','312','316','318','320','324','326','330','336','338','340','344','346','350','352','356','360','364','366','370','380','390', '358', '332']
+#'370','346','352','344','340','350','336','380','356','326',
+#couverture = ['330', '352','300','326','370','380','350','346', '344', '356', '380', '340','336']
+
 # Donnees géographiques des sections de vote.
 #Utilison sles données publuiées par le DGEQ pour extraire
 #les limites territoriales de chacune des circonscripton
@@ -38,16 +64,23 @@ circ_path = os.path.join('data', 'montreal.json')
 sections = geopandas.read_file(circ_path)
 sections['NO_SV'].astype('str')
 sections['CO_CEP'].astype('str')
-sections.set_index(['CO_CEP', 'NO_SV'], inplace=True, drop=False)
+sections.rename(columns={'NO_SV':'S.V.'}, inplace=True)
+pprint(sections.shape[0])
+pprint(sections.columns.values.tolist())
 
+df_internes = sections[sections['CO_CEP'].isin(couverture)]
+sections = df_internes
+sections.set_index(['CO_CEP', 'S.V.'], inplace=True, drop=False)
 
+pprint(sections.shape[0])
+#pprint(sections)
 
 m = folium.Map([45.5, -73.6], tiles='stamentoner', zoom_start=12)
 
 cumul = pd.DataFrame()
 
 for co_cep in couverture:
-  res_path = os.path.join('data', 'resultats-section-vote', "%d.csv"%co_cep)
+  res_path = os.path.join('data', 'resultats-section-vote', "%s.csv"%co_cep)
   data = pd.read_csv(res_path, sep=';', encoding='latin1', dtype={'S.V.':'str', 'Code':'str'})
   data.dropna(subset=['S.V.'], inplace=True)
   data.rename(columns={"Code":"CO_CEP"}, inplace=True)
@@ -91,37 +124,19 @@ for co_cep in couverture:
 
 striped = cumul[['plq', 'pq', 'caq', 'qs']]
 sections = sections.join(striped)
-pprint(sections.dtypes)
+#pprint(sections.dtypes)
+sections['couleur'] = sections.apply(getColor, axis=1)
+sections.set_index(['CO_CEP', 'S.V.'], inplace=True, drop=False)
+pprint(sections[['plq', 'pq', 'caq', 'qs', 'couleur']])
 
-def getColor(d):
-  max = 0
-  color = 'gray'
-  try: 
-    p = d['properties']
-    if (p['pq']== p['pq'] and p['pq'] > max):
-      max = p['pq']
-      color = 'blue'
-    if (p['plq'] == p['plq'] and p['plq'] > max):
-      max = p['plq']
-      color = 'red'
-    if p['caq']== p['caq'] and p['caq'] > max:
-      max = p['caq']
-      color = 'lightblue'
-    if p['qs']== p['qs'] and  p['qs'] > max:
-      max = p['qs']
-      color = 'orange'
-  except:
-    color = 'gray'
-
-  return color
 
 folium.GeoJson(sections,
-    tooltip = folium.features.GeoJsonTooltip(fields=['NM_CEP', 'NO_SV'], labels=True),
+    tooltip = folium.features.GeoJsonTooltip(fields=['NM_CEP', 'S.V.', 'couleur'], labels=True),
     style_function=lambda dd: {
-        'fillColor': getColor(dd),
+        'fillColor': dd['properties']['couleur'],
         'color' : 'green',
         'weight' : 0.5,
-        'fillOpacity' : 0.7,
+        'fillOpacity' : 0.5,
         },
 
     ).add_to(m)
