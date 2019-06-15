@@ -77,5 +77,5 @@ folium.GeoJson(r2,
     ).add_to(m)
 
 #Enfin sauvegardons la carte
-quebec_html = os.path.join('html', 'quebec.html')
+quebec_html = os.path.join('docs', 'quebec.html')
 m.save(quebec_html)
