@@ -51,7 +51,7 @@ re_ea = re.compile('.* É\.A\.$')
 re_pn = re.compile('.* P\.N\.$')
 
 
-couverture = ['300', '304','306','310','312','316','318','320','324','326','330','336','338','340','344','346','350','352','356','360','364','366','370','380','390', '358', '332']
+couverture = ['230', '232', '236', '238', '240', '244', '246', '250', '258', '252', '256', '300', '304','306','310','312','316','318','320','324','326','330','336','338','340','344','346','350','352','356','360','364','366','370','380','390', '358', '332']
 #'370','346','352','344','340','350','336','380','356','326',
 #couverture = ['330', '352','300','326','370','380','350','346', '344', '356', '380', '340','336']
 
@@ -135,7 +135,7 @@ folium.GeoJson(sections,
     style_function=lambda dd: {
         'fillColor': dd['properties']['couleur'],
         'color' : 'green',
-        'weight' : 0.5,
+        'weight' : 0.25,
         'fillOpacity' : 0.5,
         },
 
@@ -143,5 +143,5 @@ folium.GeoJson(sections,
 
 
 #Enfin sauvegardons la carte
-region_montreal_html = os.path.join('html', 'region_montreal.html')
+region_montreal_html = os.path.join('docs', 'region_montreal.html')
 m.save(region_montreal_html)
