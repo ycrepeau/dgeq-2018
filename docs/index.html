@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <style>html, body {width: 100%;height: 100%;margin: 10px;padding: 10px;}</style>
+    
+    <meta name="viewport" content="width=device-width,
+      initial-scale=1.0, maximum-scale=2.0, user-scalable=yes" />
+            
+        
+</head>
+<body>
+  <img src="https://www.dropbox.com/s/99hgjskpggo43hw/Capture%20d%27%C3%A9cran%202019-06-16%2016.39.05.png?dl=1" alt="Carte">    
+  <h3>Analyses des résultats électoraux</h3>
+  <p>
+    Le 1er octobre 2018, des 
+    <a href="https://fr.wikipedia.org/wiki/%C3%89lections_g%C3%A9n%C3%A9rales_qu%C3%A9b%C3%A9coises_de_2018"> élections générales ont eu lieues
+    au Québec </a> afin de pourvoir les 125 sièges de 
+    <a href="https://fr.wikipedia.org/wiki/Assembl%C3%A9e_nationale_(Qu%C3%A9bec)"> l'Assemblée Nationale
+    du Québec</a>.
+  </p>
+
+  <p>
+    Chacune des 125 circonscriptions du Québec est divisée en sections
+    de vote. L'idée générale est d'avoir entre 200 et 300 personnes inscrites
+    dans chaque section de vote mais il existe des circonstances forçant l'existence
+    de bien petites sections (moins de 20 personnes) ou de bien plus grandes. Il existe
+    aussi des sections de votes spéciales telles les bureaux de vote par anticipation,
+    les bureaux de votes pour étudiantes et étudiants, celles pour les électrices et
+    électeurs du Québec ou de leur circonscripton de résidence le jour du scrutin, les
+    personnes hébergées dans un hôpital, une résidence pour personnes âgées, un couvent,
+    un monastère ou un centre de détention.
+  </p>
+
+  <h4>Réalisation de ce projet</h4>
+  <p>
+    Ce projet est réalisé grâce au données disponible en vertu de la politique dite 
+    "données ouvertes" du directeur général des élections du Québec.
+  </p>
+
+  <p>
+    Conformément à la <a href="https://dgeq.org/licence.html">Licence d'utilisaton</a>
+    du DGEQ, je dois afficher la mention suivante:
+  </p>
+  <blockquote>
+    <p>
+        <i>Comprend des données ouvertes octroyées sous la licence d'utilisation 
+        des données ouvertes du directeur général des élections disponible à 
+        l'adresse Web <a href="http://dgeq.org"> dgeq.org</a>. L'octroi de la licence n'implique aucune 
+        approbation par le directeur général des élections de l'utilisation 
+        des données ouvertes qui en est faite.</i>
+    </p>
+  </blockquote>
+
+  <p>Deux jeux de données ont été nécessaires pour réaliser ce projet:</p>
+
+  <ul>
+    <li>
+      Le <a href="https://www.electionsquebec.qc.ca/documents/zip/sections_vote_23_08_2018_shapefile.zip">
+      Géométrie des sections de vote provinciales (2018)</a> qui permet de tracer le pourtour correspondant
+      au territoire occupé pour chacune des sections sur une carte géographique interactive
+    </li>
+    <li>
+      Les <a href="https://www.electionsquebec.qc.ca/documents/zip/resultats-section-vote/2018-10-01.zip"></a>
+      Résultats officiels par section de vote (en date du 2018-12-04)
+    </li>
+  </ul>
+
+  <p>
+    Ces deux jeux de données ne sont pas utilisables tels quels. Par exemple le premier est encodé
+    avec UTF-8 tandis que le second utilise le vieux standard ISO-8859-1. La plupart des fichiers
+    des résultats sont des fichiers *.csv mais les tous derniers (en utilisant l'ordre alphabétique
+    des noms de circonscrition) sont des fichiers *.xslt (Excel). Dans un des fichiers, chaque circonscrition
+    est identifié par un code nommé "CO_CEP" tandis que dans les fichiers de résultats cette colonne 
+    est nommée "Code". Idem pour l'identifiant de la section de vote ("S.V." et "NO_SV"). 
+  </p>
+
+  <p>
+    Une fois ces petites différences gommées, il devient facile de créer un tableau (geopandas) et
+    et y intégrer les deux jeux de données.
+  </p>
+
+  <h4>Les cartes interactives</h4>
+    <ul>
+      <li><a href="region_montreal.html">Région de Montréal</a></li>
+      <li><a href="region_quebec.html">Région de Québec</a></li>
+      <li><a href="region_rouyn.html">Ouest du Québec (ouest de Sherbrooke environ)</a></li>
+      <li><a href="region_sherbrooke.html">Est du Québec (est du Richelieu, Repentigny, Mistassini)</a></li>
+    </ul>
+
+    <p>
+      À NOTER: Les deux derniers fichiers, trop ambitieux, ne s'affichent pas bien sur un cellulaire.
+      Je compte offrir des régions beaucoup plus petites pour respecter les contraintes de mémoire des
+      appareils  mobiles.
+    </p>
+
+    <p>En terminant...</p>
+
+    <p>
+      J'ai eu droit à une petite surprise en cartographiant la circonscripton Laviolette-Saint-Maurice. 
+      Remarquez également l'excellente performance de Qs à Manawan dans la circonscription de Berthier.
+    </p>
+    <p>
+      <img src="https://www.dropbox.com/s/djry4loz5min8kh/Capture%20d%27%C3%A9cran%202019-06-16%2017.00.27.png?dl=1" alt="">
+    </p>
+
+</body>
