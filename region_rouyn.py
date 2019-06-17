@@ -50,14 +50,80 @@ re_ea = re.compile('.* É\.A\.$')
 re_pn = re.compile('.* P\.N\.$')
 
 
-couverture = ['110', '116', '120', '126', '132', '138', '150', '204', 
-  '206', '210','212','216', '218', '220', '224', '226', '230', '232', '236', '238', '240', '244',
-  '246', '250', '252', '256', '258', '260', '264',
-  '502', '508', '514', '520', '530', '526', '536', '542', '548', '554', '560', '566', 
-  '554', '594', '570','576', '582', '588', 
-  '602', '608', '614', '620', '626', '636','648','642', '660', '666', '670', '676', 
+couverture = [
+  # 100-199 Estrie Centre-du-Québec
+  '104', #Mégantic
+  '110', #Saint-François
+  '116', #Sherbrooke 
+  '120', #Orford
+  '126', #Johnson
+  '132', #Richmond
+  '138', #Drummond-Bois-Franc
+  '144', #Arthabasca
+  '150', #Nicolet-Bétancour
+
+  # Montérégie
+  '204', #Brome-Missisquoi
+  '206', #Granby
+  '210', #Iberville
+  '212', #Saint-Jean
+  '216', #Huntingdon
+  '218', #Beauharnois
+  '220', #Soulanges
+  '224', #Vaudreuil
+  '226', #Châteauguay
+  '230', #Sanguinet
+  '232', #La Prairie
+  '236', #Lapinière
+  '238', #Chambly
+  '240', #Vachon
+  '244', #Laporte
+  '246', #Marie-Victorin
+  '250', #Taillon
+  '252', #Montarville
+  '256', #Verchère
+  '258', #Borduas
+  '260', #Saint-Hyacinthe
+  '264', #Richelieu
+
+  # 300-399 Ile de Montréal
+  # 400-499 Laval
+
+  #500-599 Laurentides
+  '502', #Groulx
+  '508', #Deux-Montagne
+  '514', #Mirabel
+  '520', #Argenteuil
+  '530', #Saint-Jérôme
+  '526', #Les Plaines
+  '536', #Blainville
+  '542', #Terrebonne
+  '548', #Masson
+  '554', #L'Assomption
+  '560', #Repentigny
+  '566', #Berthier
+  '570', #Joliette
+  '576', #Rousseau
+  '582', #Prévost
+  '588', #Bertrand
+  '594', #Labelle
+
+  # 600-699 Outaouais
+  '602', 
+  '608', 
+  '614', 
+  '620', 
+  '626', 
+  '636',
+  '648',
+  '642', 
+  '660', 
+  '666', 
+  '670', 
+  '676', 
   '714', 
-  '930', '938']
+  '930', 
+  '938']
 
 
 # Donnees géographiques des sections de vote.
