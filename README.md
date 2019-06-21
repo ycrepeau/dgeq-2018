@@ -10,3 +10,7 @@ Voir https://ycrepeau.github.io/dgeq-2018 pour explications.
 - Québec:    ogr2ogr -clipsrc -71.75 46.7 -70.75 47.0 quebec.json sections.json
 - Rouyn:      ogr2ogr -clipsrc -79.5 45.0 -72.0 52.0 rouyn.json sections.json
 - Sherbrooke: ogr2ogr -clipsrc -72.5 45.0 -64.0 52.0 sherbrooke.json sections.json
+
+Pour enlever de tres gros fichiers du git:
+
+git filter-branch --tree-filter 'rm -rf data/sections.json' HEAD

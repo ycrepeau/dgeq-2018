@@ -8,6 +8,15 @@ import pandas as pd
 import re
 import math
 
+# Définir les couleurs attribuée à chacun des partis ayant 
+# fait élire au moins 1 personne comme députée
+couleurs = {
+    'C.A.Q.-É.F.L.': 'lightblue',
+    'P.L.Q./Q.L.P.': 'red',
+    'Q.S.': 'orange',
+    'P.Q.': 'blue'
+}
+
 # Identification des partis 
 re_caq = re.compile('.*C\.A\.Q\.-É\.F\.L\.$')
 re_qs = re.compile('.*Q\.S\.$')
@@ -98,15 +107,15 @@ def groupe_consolidation(d):
 
 couverture = [
   # 100-199 Estrie Centre-du-Québec
-  #'104', #Mégantic
-  #'110', #Saint-François
-  #'116', #Sherbrooke 
-  #'120', #Orford
-  #'126', #Johnson
-  #'132', #Richmond
-  #'138', #Drummond-Bois-Franc
-  #'144', #Arthabasca
-  #'150', #Nicolet-Bétancour
+  '104', #Mégantic
+  '110', #Saint-François
+  '116', #Sherbrooke 
+  '120', #Orford
+  '126', #Johnson
+  '132', #Richmond
+  '138', #Drummond-Bois-Franc
+  '144', #Arthabasca
+  '150', #Nicolet-Bétancour
 
   # Montérégie
   #'204', #Brome-Missisquoi
@@ -133,41 +142,41 @@ couverture = [
   #'264', #Richelieu
 
   # 300-399 Ile de Montréal
-  '300', #Verdun
-  '304', #Marguerite-Bourgeoys
-  '306', #Marquette
-  '310', #Jacques Cartier
-  '312', #Nelligan
-  '316', #Robert-Badwin
-  '318', #Saint-Laurent
-  '320', #D'Arcee-McGee
-  '324', #Notre-Dame-de-Grace
-  '326', #Saint-Henri Saint-Anne
-  '330', #Sainte-Marie - Saint-Jacques
-  '332', #Westmount Saint-Louis
-  '336', #Mont-Royal Outremont
-  '338', #Acadie
-  '340', #Maurice Richard
-  '344', #Laurier-Dorion
-  '346', #Gouin
-  '350', #Mercier
-  '352', #Hochelage-Maisonneuve
-  '356', #Rosemont
-  '360', #Bourassa-Sauvé
-  '364', #Jeanne-Mance - Viger
-  '366', #Anjou Louis Riel
-  '370', #Bourget
-  '380', #Pointe-aux-Tremble
-  '390', #Lafontaine 
-  '358', #Viau
+  #'300', #Verdun
+  #'304', #Marguerite-Bourgeoys
+  #'306', #Marquette
+  #'310', #Jacques Cartier
+  #'312', #Nelligan
+  #'316', #Robert-Badwin
+  #'318', #Saint-Laurent
+  #'320', #D'Arcee-McGee
+  #'324', #Notre-Dame-de-Grace
+  #'326', #Saint-Henri Saint-Anne
+  #'330', #Sainte-Marie - Saint-Jacques
+  #'332', #Westmount Saint-Louis
+  #'336', #Mont-Royal Outremont
+  #'338', #Acadie
+  #'340', #Maurice Richard
+  #'344', #Laurier-Dorion
+  #'346', #Gouin
+  #'350', #Mercier
+  #'352', #Hochelage-Maisonneuve
+  #'356', #Rosemont
+  #'360', #Bourassa-Sauvé
+  #'364', #Jeanne-Mance - Viger
+  #'366', #Anjou Louis Riel
+  #'370', #Bourget
+  #'380', #Pointe-aux-Tremble
+  #'390', #Lafontaine 
+  #'358', #Viau
   
   # 400-499 Laval
-  '460', #Chomeydeu
-  '466', #Fabre
-  '454', #Laval des Rapides
-  '482', #Mille Isles
-  '470', #Sainte-Rose
-  '476', #Vimont
+  #'460', #Chomeydeu
+  #'466', #Fabre
+  #'454', #Laval des Rapides
+  #'482', #Mille Isles
+  #'470', #Sainte-Rose
+  #'476', #Vimont
 
   #500-599 Laurentides
   #'502', #Groulx
@@ -197,15 +206,15 @@ couverture = [
   #'636', #Rouyn-Noranda
   #'648', #Abitibi-Est
   #'642', #Abitibi-Ouest
-  #'660', #Trois-Rivières 
-  #'666', #Maskinongé
-  #'670', #Laviolette - Saint-Maurice
-  #'676', #Champlain
+  '660', #Trois-Rivières 
+  '666', #Maskinongé
+  '670', #Laviolette - Saint-Maurice
+  '676', #Champlain
   #
   # 700-799 Québec
   #'714',  #Portneuf
   #'930', #Roberval
-  #'938' #Ungave
+  #'938' #Ungava
 ]
 
 # Donnees géographiques des sections de vote.
@@ -213,7 +222,7 @@ couverture = [
 #les limites territoriales de chacune des circonscripton
 #le résultat (circonscriptons) est un dataframe créé par
 #la bibliotèque geopandas
-circ_path = os.path.join('data', 'rouyn.json')
+circ_path = os.path.join('data', 'sherbrooke.json')
 sections = geopandas.read_file(circ_path)
 sections['NO_SV'].astype('str')
 sections['CO_CEP'].astype('str')
@@ -367,24 +376,59 @@ sections.set_index(['CO_CEP', 'S.V.'], inplace=True, drop=False)
 
 
 
-
+#Limites des circonscriptons.
 circ_path = os.path.join('data', 'circ.json')
 circonscriptions = geopandas.read_file(circ_path)
 circonscriptions.set_index('CO_CEP', inplace=True, drop=False)
 df_externe = circonscriptions[~circonscriptions['CO_CEP'].isin(couverture)]
 df_interne = circonscriptions[circonscriptions['CO_CEP'].isin(couverture)]
 
+# Utilisons les données publiées par le DGEQ pour extraire
+# les résultats pour chacune des circonscriptons
+dgeq2018_path = os.path.join('data', 'resultats.json')
+dgeq2018_file = open(dgeq2018_path)
+dgeq2018_json = json.load(dgeq2018_file)
+
+#On commence avec un tables vide
+resultats_par_circonscripton = []
+
+# Que l'on remplit avec les données lues
+# Pour chaque circonscription:
+# On crée un dictionnaire (c_res)
+# On ajoute le code identifiant la circonscripton (CO_CEP)
+# Le parti vainqueur dans cette circonscripton (vainqueur)
+# Et la couleur associée à ce parti.
+for c in dgeq2018_json['circonscriptions']:
+    c_res = {
+        'CO_CEP': int(c['numeroCirconscription']),
+        'vainqueur': c['candidats'][0]['abreviationPartiPolitique'],
+        'couleur': couleurs[c['candidats'][0]['abreviationPartiPolitique']]
+    }
+    # Enfin on ajoute le dictionnaire c_rest au tableau des résultats
+    resultats_par_circonscripton.append(c_res)
+
+
+# Enfin, à l'aide du tableau, on crée un "dataFrame" à l'aide de la
+# blibliothèque pandas.
+resultats_df = pd.DataFrame(resultats_par_circonscripton)
+resultats_df.set_index('CO_CEP', inplace=True)
+
+df_externe = df_externe.join(resultats_df)
+
+
+#Limites des circonscriptions hors zone de couverture (avec tooltip et coloration)
 folium.GeoJson(df_externe,
   tooltip = folium.features.GeoJsonTooltip(fields=['CO_CEP','NM_CEP'], labels=False),
   style_function=lambda dd: {
-      'fillColor': 'white',
+      'fillColor': dd['properties']['couleur'],
       'color' : 'red',
       'weight' : 0.25,
-      'fillOpacity' : 0.0,
+      'fillOpacity' : 0.7,
       }
 
  ).add_to(m)
 
+#Limites des circonscriptions DANS la zone de couverture (sans tooltip ni coloration)
 folium.GeoJson(df_interne,
   style_function=lambda dd: {
       'fillColor': 'white',
@@ -392,10 +436,9 @@ folium.GeoJson(df_interne,
       'weight' : 1.25,
       'fillOpacity' : 0.0,
       },
+  ).add_to(m)
 
- ).add_to(m)
-
- # Ajoutons les sections (après fusion avec les résultats) à lacarte
+# Ajoutons les sections (après fusion avec les résultats) à lacarte
 folium.GeoJson(
   sections,
   # On règle le tooltip ici pour aficher diverses infos.
@@ -408,8 +451,8 @@ folium.GeoJson(
       'fillOpacity' : dd['properties']['strength'],
       },
 
-).add_to(m)
+  ).add_to(m)
 
-
-region_test_html = os.path.join('docs', 'region_test.html')
+# Enregistrement final du fichier consolidé.
+region_test_html = os.path.join('docs', 'region_estrie_centre_mauricie.html')
 m.save(region_test_html)
