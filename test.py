@@ -42,9 +42,10 @@ def getColor(d):
     if p['caq']== p['caq'] and p['caq'] > max:
       max = p['caq']
       color = 'lightblue'
-    if p['qs']== p['qs'] and  p['qs'] > max:
+    if p['qs']== p['qs'] and  p['qs'] >= max:
       max = p['qs']
       color = 'orange'
+    
   except:
     color = 'white'
   return color
@@ -70,6 +71,7 @@ def getStrength(d):
       max = p['caq']
     if p['qs']== p['qs'] and  p['qs'] > max:
       max = p['qs']
+
   except:
     max = 0
 
@@ -364,7 +366,36 @@ sections['strength'] = sections.apply(getStrength, axis=1)
 sections.set_index(['CO_CEP', 'S.V.'], inplace=True, drop=False)
 
 
-# Ajoutons les sections (après fusion avec les résultats) à lacarte
+
+
+circ_path = os.path.join('data', 'circ.json')
+circonscriptions = geopandas.read_file(circ_path)
+circonscriptions.set_index('CO_CEP', inplace=True, drop=False)
+df_externe = circonscriptions[~circonscriptions['CO_CEP'].isin(couverture)]
+df_interne = circonscriptions[circonscriptions['CO_CEP'].isin(couverture)]
+
+folium.GeoJson(df_externe,
+  tooltip = folium.features.GeoJsonTooltip(fields=['CO_CEP','NM_CEP'], labels=False),
+  style_function=lambda dd: {
+      'fillColor': 'white',
+      'color' : 'red',
+      'weight' : 0.25,
+      'fillOpacity' : 0.0,
+      }
+
+ ).add_to(m)
+
+folium.GeoJson(df_interne,
+  style_function=lambda dd: {
+      'fillColor': 'white',
+      'color' : 'green',
+      'weight' : 1.25,
+      'fillOpacity' : 0.0,
+      },
+
+ ).add_to(m)
+
+ # Ajoutons les sections (après fusion avec les résultats) à lacarte
 folium.GeoJson(
   sections,
   # On règle le tooltip ici pour aficher diverses infos.
